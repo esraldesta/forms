@@ -46,7 +46,7 @@ const Signin = () => {
                             <FormItem className="space-y-0">
                                 <FormLabel className="text-foreground">Email</FormLabel>
                                 <FormMessage />
-                                <FormControl><Input type='email' placeholder="Enter your email address" autoComplete="off" {...field} /></FormControl>
+                                <FormControl><Input type='email' placeholder="Enter your email address"  {...field} /></FormControl>
                             </FormItem>
                         )}></FormField>
 

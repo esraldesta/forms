@@ -2,7 +2,7 @@
 import { z } from "zod";
 import db from "./db";
 import bcrypt from "bcryptjs";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 const signupSchema = z.object({
   email: z.string().email(),
@@ -67,7 +67,6 @@ export async function singin({
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
-        
         case "CredentialsSignin":
           return {
             message: "Invalid credentials",
@@ -78,7 +77,11 @@ export async function singin({
           };
       }
     }
-  
-    throw error
+
+    throw error;
   }
+}
+
+export async function signout() {
+  await signOut();
 }
