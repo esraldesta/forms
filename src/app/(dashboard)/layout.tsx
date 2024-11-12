@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import ModeToggle from "@/components/ModeToggle";
 import Profile from "@/components/Profile";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 
