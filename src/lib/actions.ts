@@ -2,6 +2,8 @@
 import { z } from "zod";
 import db from "./db";
 import bcrypt from "bcryptjs";
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 const signupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(32),
@@ -47,4 +49,36 @@ export async function singup(
     errors: {},
     message: "Created",
   };
+}
+
+export async function singin({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/",
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        
+        case "CredentialsSignin":
+          return {
+            message: "Invalid credentials",
+          };
+        default:
+          return {
+            message: "Something went wrong",
+          };
+      }
+    }
+  
+    throw error
+  }
 }
