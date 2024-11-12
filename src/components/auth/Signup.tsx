@@ -50,7 +50,7 @@ export default function Signup() {
                     }
                 >Create an account</button>
                 <p className="text-sm font-light">
-                    Already have an account? <Link href="#" className="font-medium underline">Login here</Link>
+                    Already have an account? <Link href="/auth/signin" className="font-medium underline">Login here</Link>
                 </p>
             </form>
         </div>

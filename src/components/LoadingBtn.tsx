@@ -6,6 +6,6 @@ export default function LoadingBtn({ pending }: {
 }) {
 
     return (
-        <Button className='mt-5' >{pending ? "Loading" : "Submit"}</Button>
+        <Button className='my-5' >{pending ? "Loading" : "Submit"}</Button>
     )
 }

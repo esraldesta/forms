@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -11,14 +12,19 @@ import {
 import { signout } from "@/lib/actions"
 import { LogOutIcon, UserRound } from "lucide-react"
 
-export default function Profile() {
+export default async function Profile() {
+    const session = await auth()
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="rounded-full"><UserRound /></Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuContent className="max-w-36">
+                <DropdownMenuLabel>
+                    <p className="">My Account</p>
+                    <p className="text-[8px] truncate">{session?.user?.email}</p>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
