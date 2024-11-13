@@ -70,7 +70,11 @@ function previewComponent({ elementInstance }: {
   const { label, placeholder, helperText, required } = elementInstance.extraAttributes
   console.log(label,placeholder,helperText,required);
   
-  return <div></div>
+  return <div className='text-left m-2 p-2 border border-blue-200 rounded'>
+    <Label htmlFor={elementInstance.id}>{label}</Label>
+    <Input type="text" id={elementInstance.id} placeholder={placeholder} required={required} className='border-blue-200' />
+    <p className='text-xs text-muted-foreground ml-2'>{helperText}</p>
+  </div>
 
 }
 
