@@ -20,16 +20,71 @@ export default function Designer() {
     }
   })
 
-  const { elements, addElement } = useDesigner()
+  const { elements, addElement,removeElement } = useDesigner()
 
   useDndMonitor({
     onDragEnd: (event) => {
       const { active, over } = event;
       if (!active || !over) return;
-      const type = active.data.current?.type as ElementsType
-      const elementInstance = FormElements[type].constract(idGenerator())
-      if (active.data.current?.isSidebarBtnElement) {
-        addElement(0, elementInstance)
+      // const type = active.data.current?.type as ElementsType
+      // const elementInstance = FormElements[type].constract(idGenerator())
+      // if (active.data.current?.isSidebarBtnElement) {
+      //   addElement(0, elementInstance)
+      // }
+
+      const isSidebarBtnElement = active.data?.current?.isSidebarBtnElement;
+      const isDroppingOverDesignerDropArea = over.data?.current?.isDesignerDropArea;
+      // First senario: dropping a sidebar btn element over the designer drop area 
+      if (isSidebarBtnElement && isDroppingOverDesignerDropArea) {
+        const type = active.data?.current?.type;
+        const newElement = FormElements[type as ElementsType].constract(
+          idGenerator()
+        );
+
+        addElement(elements.length, newElement)
+        return
+      }
+
+      const isDropingOverDesignerArea = over.data?.current?.isTopHalfDesignerElement || over.data?.current?.isBottomHalfDesignerElement
+      // Second senario: dropping a sidebar btn element over the top or bottom of the existing designer elements
+      if (isSidebarBtnElement && isDropingOverDesignerArea) {
+        const overElementIndex = elements.findIndex(el => el.id === over.data?.current?.elementId);
+        if (overElementIndex === -1) {
+          throw new Error("Element not found")
+        } {
+          let indexForNewElement = overElementIndex;
+          if (over.data?.current?.isBottomHalfDesignerElement) {
+            indexForNewElement = overElementIndex + 1
+          }
+
+          const type = active.data?.current?.type;
+          const newElement = FormElements[type as ElementsType].constract(
+            idGenerator()
+          );
+
+          addElement(indexForNewElement, newElement)
+          return
+        }
+      }
+      // third senario: rearanging the designer elements
+
+      const isDraggingDesignerElement = active.data?.current?.isDesignerElement
+      const draggingDesignerElementOverDesginerElement = isDropingOverDesignerArea && isDraggingDesignerElement
+      if (draggingDesignerElementOverDesginerElement) {
+        const activeId = active.data.current?.elementId;
+        const overId = over.data.current?.elementId;
+        const activeElementIndex = elements.findIndex((el) => el.id === activeId)
+        const overElementIndex = elements.findIndex((el) => el.id === overId)
+        if(activeElementIndex === -1 || overElementIndex === -1){
+          throw new Error("Element not found")
+        }
+        const activeElement = {...elements[activeElementIndex]}
+        removeElement(activeId)
+        let indexForNewElement = overElementIndex;
+        if(over.data?.current?.isBottomHalfDesignerElement){
+          indexForNewElement = overElementIndex + 1;
+        }
+        addElement(indexForNewElement,activeElement)
       }
     }
   })
