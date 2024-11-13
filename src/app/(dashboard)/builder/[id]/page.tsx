@@ -1,7 +1,29 @@
+"use client"
+import Designer from '@/components/Designer'
+import DesignerSideBar from '@/components/DesignerSideBar'
+import DragOverlayWrapper from '@/components/forms/DragOverlayWrapper'
+import { Button } from '@/components/ui/button'
+import DesignerContextProvider from '@/contexts/DesignerContext'
+import { DndContext } from '@dnd-kit/core'
 import React from 'react'
 
 export default function page() {
   return (
-    <div>page</div>
+    <DesignerContextProvider>
+      <div className='grow bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)] flex flex-col'>
+        <div className='flex justify-between px-5 py-5 bg-accent'>
+          <p>Form: Name</p>
+          <Button>Preview</Button>
+        </div>
+        <DndContext>
+          <div className='grow grid grid-cols-6 gap-2 ml-5'>
+            <Designer />
+            <DesignerSideBar />
+          </div>
+
+          <DragOverlayWrapper />
+        </DndContext>
+      </div>
+    </DesignerContextProvider>
   )
 }
