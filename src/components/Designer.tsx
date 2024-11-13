@@ -1,5 +1,5 @@
 import useDesigner from '@/hooks/useDesigner'
-import { useDndMonitor, useDroppable } from '@dnd-kit/core'
+import { useDndMonitor, useDraggable, useDroppable } from '@dnd-kit/core'
 import React, { useState } from 'react'
 import { ElementsType, FormElementInstance, FormElements } from './forms/FormElements'
 import { Trash } from 'lucide-react'
@@ -23,40 +23,38 @@ export default function Designer() {
   const { elements, addElement } = useDesigner()
 
   useDndMonitor({
-    onDragOver: () => {
-      console.log("over");
-
-    },
     onDragEnd: (event) => {
       const { active, over } = event;
       if (!active || !over) return;
       const type = active.data.current?.type as ElementsType
       const elementInstance = FormElements[type].constract(idGenerator())
-      addElement(0, elementInstance)
+      if (active.data.current?.isSidebarBtnElement) {
+        addElement(0, elementInstance)
+      }
     }
-
-
   })
 
   return (
     <div ref={droppable.setNodeRef}
       className='col-span-4 md:col-span-5 pb-10 flex justify-center'>
       <div className='text-center mt-5 bg-accent w-full max-w-[800px]  overflow-y-auto'>
-        {elements.length < 1 ? <p>Drop Here</p>
-          :
+        {!droppable.isOver && elements.length < 1 && <p>Drop Here</p>}
+        {
+          droppable.isOver && elements.length < 1 && <div className='w-full h-[120px] bg-primary/20'></div>
+        }
+        {elements.length > 0 &&
           <>
             {elements.map(element => {
               return <DesignerComponentWrapper key={element.id} element={element} />
             })}
           </>
         }
-
       </div>
     </div>
   )
 }
 
-function DesignerComponentWrapper({ element }: {
+export function DesignerComponentWrapper({ element }: {
   element: FormElementInstance
 }) {
   const { removeElement } = useDesigner()
@@ -79,14 +77,27 @@ function DesignerComponentWrapper({ element }: {
     }
   })
 
+  const draggable = useDraggable({
+    id: element.id + "-drag-handler",
+    data: {
+      type: element.type,
+      elementId: element.id,
+      isDesignerElement: true
+    }
+  })
 
+  if (draggable.isDragging) return null;
 
   const { setSelectedElement } = useDesigner()
   const DesignerComponent = FormElements[element.type].designerComponent
   return (
-    <div onClick={() => {
-      setSelectedElement(element)
-    }}
+    <div
+      ref={draggable.setNodeRef}
+      {...draggable.attributes}
+      {...draggable.listeners}
+      onClick={() => {
+        setSelectedElement(element)
+      }}
       onMouseEnter={() => {
         setMouseIsOver(true)
       }}
@@ -102,7 +113,8 @@ function DesignerComponentWrapper({ element }: {
         <>
           <div className='absolute h-full right-0 z-10'>
             <Button className="h-full bg-destructive rounded rounded-l-none" variant={"destructive"}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 removeElement(element.id)
               }}
             >
@@ -115,6 +127,9 @@ function DesignerComponentWrapper({ element }: {
         </>
       }
 
+      {
+        topHalf.isOver && <div className='absolute h-2 top-0 w-full bg-blue-200 rounded-t '></div>
+      }
 
       <div className={
         cn("opacity-100",
@@ -123,5 +138,9 @@ function DesignerComponentWrapper({ element }: {
       }>
         <DesignerComponent key={element.id} elementInstance={element} />
       </div>
+
+      {
+        bottomHalf.isOver && <div className='absolute h-2 bottom-0 w-full bg-blue-200 rounded-b '></div>
+      }
     </div>)
 }

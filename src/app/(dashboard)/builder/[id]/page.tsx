@@ -4,10 +4,18 @@ import DesignerSideBar from '@/components/DesignerSideBar'
 import DragOverlayWrapper from '@/components/forms/DragOverlayWrapper'
 import { Button } from '@/components/ui/button'
 import DesignerContextProvider from '@/contexts/DesignerContext'
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 import React from 'react'
 
 export default function page() {
+
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10,
+    }
+  })
+  const touchSensor = useSensor(TouchSensor)
+  const sensors = useSensors(mouseSensor, touchSensor)
   return (
     <DesignerContextProvider>
       <div className='grow bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)] flex flex-col'>
@@ -15,7 +23,7 @@ export default function page() {
           <p>Form: Name</p>
           <Button>Preview</Button>
         </div>
-        <DndContext id={"111"}>
+        <DndContext id={"111"} sensors={sensors}>
           <div className='grow grid grid-cols-6 gap-2 ml-5'>
             <Designer />
             <DesignerSideBar />
