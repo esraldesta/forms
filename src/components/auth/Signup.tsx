@@ -13,7 +13,6 @@ export default function Signup() {
     })
 
     useEffect(() => {
-        console.log(data);
         
         if (!data.error && data.message) {
             router.push("/"); 

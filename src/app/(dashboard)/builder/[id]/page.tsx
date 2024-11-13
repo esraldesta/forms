@@ -15,7 +15,7 @@ export default function page() {
           <p>Form: Name</p>
           <Button>Preview</Button>
         </div>
-        <DndContext>
+        <DndContext id={"111"}>
           <div className='grow grid grid-cols-6 gap-2 ml-5'>
             <Designer />
             <DesignerSideBar />

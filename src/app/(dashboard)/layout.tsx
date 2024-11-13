@@ -6,8 +6,6 @@ import React from "react";
 
 export default async function layout({ children }: { children: React.ReactNode }) {
   const session = await auth()
-  console.log("session", session);
-
   return (
     <div className="flex flex-col h-screen">
       <nav className="flex justify-between px-10 py-2 bg-accent border-b-[1px] border-blue-200">
