@@ -1,9 +1,11 @@
 "use server";
+import { auth, signIn, signOut } from "@/auth";
+import { formSchema } from "@/lib/schemas";
+import bcrypt from "bcryptjs";
+import { AuthError } from "next-auth";
 import { z } from "zod";
 import db from "./db";
-import bcrypt from "bcryptjs";
-import { signIn, signOut } from "@/auth";
-import { AuthError } from "next-auth";
+
 const signupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(32),
@@ -84,4 +86,79 @@ export async function singin({
 
 export async function signout() {
   await signOut();
+}
+
+class UserNotFoundError extends Error {}
+
+export async function GetFormStats() {
+  const session = await auth();
+  if (!session?.user) {
+    throw new UserNotFoundError();
+  }
+  const stats = db.form.aggregate({
+    where: {
+      userID: session.user.id,
+    },
+    _sum: {
+      visits: true,
+      submissions: true,
+    },
+  });
+  const visits = (await stats)._sum.visits || 0;
+  const submissions = (await stats)._sum.submissions || 0;
+  let submissionsRate = 0;
+  if (visits > 0) {
+    submissionsRate = (submissions / visits) * 100;
+  }
+  const bounceRate = 100 - submissionsRate;
+
+  return {
+    visits,
+    submissions,
+    submissionsRate,
+    bounceRate,
+  };
+}
+
+type formSchemaType = z.infer<typeof formSchema>;
+export async function CreateForm(data: formSchemaType) {
+  const validation = formSchema.safeParse(data);
+  if (!validation.success) {
+    throw new Error("form not valid");
+  }
+  const session = await auth();
+  console.log("session",session);
+  
+  if (!session?.user) {
+    throw new UserNotFoundError();
+  }
+  const form = await db.form.create({
+    data: {
+      userID: session.user.id as string,
+      name: data.name,
+      description: data.description,
+    },
+  });
+
+  if (!form) {
+    throw new Error("Some thing went wrong");
+  }
+
+  return form.id;
+}
+
+export async function GetForms() {
+  const session = await auth();
+  if (!session?.user) {
+    throw new UserNotFoundError();
+  }
+
+  return await db.form.findMany({
+    where: {
+      userID: session.user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 }
