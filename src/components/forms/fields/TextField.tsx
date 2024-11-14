@@ -56,11 +56,11 @@ function DesignerComponent({ elementInstance }: {
   elementInstance: FormElementInstance
 }) {
   const { label, placeholder, helperText, required } = elementInstance.extraAttributes
-  return <div className='text-left m-2 p-2 border border-blue-200 rounded'>
-    <Label htmlFor={elementInstance.id}>{label}</Label>
-    <Input type="text" id={elementInstance.id} placeholder={placeholder} required={required} className='border-blue-200' />
-    <p className='text-xs text-muted-foreground ml-2'>{helperText}</p>
-  </div>
+  return <div className='flex flex-col gap-2 w-full'>
+  <Label>{label}{required && "*"}</Label>
+  <Input readOnly disabled placeholder={placeholder}></Input>
+  {helperText && <p className='text-muted-foreground text-[0.8rem]'>{helperText}</p>}
+</div>
 
 }
 
@@ -70,11 +70,11 @@ function previewComponent({ elementInstance }: {
   const { label, placeholder, helperText, required } = elementInstance.extraAttributes
   console.log(label,placeholder,helperText,required);
   
-  return <div className='text-left m-2 p-2 border border-blue-200 rounded'>
-    <Label htmlFor={elementInstance.id}>{label}</Label>
-    <Input type="text" id={elementInstance.id} placeholder={placeholder} required={required} className='border-blue-200' />
-    <p className='text-xs text-muted-foreground ml-2'>{helperText}</p>
-  </div>
+  return <div className='flex flex-col gap-2 w-full'>
+  <Label>{label}{required && "*"}</Label>
+  <Input placeholder={placeholder}></Input>
+  {helperText && <p className='text-muted-foreground text-[0.8rem]'>{helperText}</p>}
+</div>
 
 }
 
