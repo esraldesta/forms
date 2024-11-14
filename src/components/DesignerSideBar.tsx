@@ -14,9 +14,6 @@ export default function DesignerSideBar() {
           :
           <div className='flex flex-wrap justify-around gap-2'>
             <SidebarBtn element={FormElements.TextField} />
-            <SidebarBtn element={FormElements.TextField} />
-            <SidebarBtn element={FormElements.TextField} />
-            <SidebarBtn element={FormElements.TextField} />
           </div>
       }
     </div>
