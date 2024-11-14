@@ -7,13 +7,15 @@ import PropertiesFormSidebar from './forms/PropertiesFormSidebar'
 export default function DesignerSideBar() {
   const { selectedElement } = useDesigner()
   return (
-    <div className='col-span-2 md:col-span-1 bg-accent p-1 bt border-t-[1px] border-blue-200'>
-
+    <div className='h-full bg-background p-1 bt border-t-[1px] border-border'>
       {
         selectedElement ?
           <PropertiesFormSidebar />
           :
-          <div className='grid grid-cols-2 gap-2'>
+          <div className='flex flex-wrap justify-around gap-2'>
+            <SidebarBtn element={FormElements.TextField} />
+            <SidebarBtn element={FormElements.TextField} />
+            <SidebarBtn element={FormElements.TextField} />
             <SidebarBtn element={FormElements.TextField} />
           </div>
       }

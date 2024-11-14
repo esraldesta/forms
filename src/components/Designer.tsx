@@ -91,8 +91,8 @@ export default function Designer() {
 
   return (
     <div ref={droppable.setNodeRef}
-      className='col-span-4 md:col-span-5 pb-10 flex justify-center'>
-      <div className='text-center mt-5 bg-accent w-full max-w-[800px]  overflow-y-auto'>
+      className='pb-10 flex justify-center h-full'>
+      <div className='text-center mt-5 bg-background w-full max-w-[800px] h-full overflow-y-auto'>
         {!droppable.isOver && elements.length < 1 && <p>Drop Here</p>}
         {
           droppable.isOver && elements.length < 1 && <div className='w-full h-[120px] bg-primary/20'></div>
@@ -140,10 +140,10 @@ export function DesignerComponentWrapper({ element }: {
       isDesignerElement: true
     }
   })
-
+  
+  const { setSelectedElement } = useDesigner()
   if (draggable.isDragging) return null;
 
-  const { setSelectedElement } = useDesigner()
   const DesignerComponent = FormElements[element.type].designerComponent
   return (
     <div
