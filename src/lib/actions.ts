@@ -1,11 +1,10 @@
 "use server";
-import { auth, signIn, signOut } from "@/auth";
 import { formSchema } from "@/lib/schemas";
-import bcrypt from "bcryptjs";
-import { AuthError } from "next-auth";
 import { z } from "zod";
 import db from "./db";
-
+import bcrypt from "bcryptjs";
+import { auth, signIn, signOut } from "@/auth";
+import { AuthError } from "next-auth";
 const signupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(32),
@@ -127,8 +126,8 @@ export async function CreateForm(data: formSchemaType) {
     throw new Error("form not valid");
   }
   const session = await auth();
-  console.log("session",session);
-  
+  console.log("session", session);
+
   if (!session?.user) {
     throw new UserNotFoundError();
   }
@@ -159,6 +158,47 @@ export async function GetForms() {
     },
     orderBy: {
       createdAt: "desc",
+    },
+  });
+}
+
+export async function GetFormById(id: number) {
+  const session = await auth();
+  if (!session?.user) throw new UserNotFoundError();
+  return await db.form.findUnique({
+    where: {
+      userID: session.user.id,
+      id,
+    },
+  });
+}
+
+export async function UpdateFormContent(id: number, jsonContent: string) {
+  const session = await auth();
+  if (!session?.user) throw new UserNotFoundError();
+
+  return db.form.update({
+    where: {
+      userID: session.user.id,
+      id,
+    },
+    data: {
+      content: jsonContent,
+    },
+  });
+}
+
+export async function Publishform(id: number) {
+  const session = await auth();
+  if (!session?.user) throw new UserNotFoundError();
+
+  return db.form.update({
+    data: {
+      published: true,
+    },
+    where: {
+      userID: session.user.id,
+      id,
     },
   });
 }

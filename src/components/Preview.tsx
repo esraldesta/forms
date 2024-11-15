@@ -10,7 +10,7 @@ export default function Preview() {
         <Dialog>
 
             <DialogTrigger asChild>
-                <Button>
+                <Button variant={'outline'}>
                     Preview
                 </Button>
             </DialogTrigger>

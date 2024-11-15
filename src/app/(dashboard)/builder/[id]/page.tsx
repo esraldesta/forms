@@ -1,47 +1,20 @@
-"use client"
-import Designer from '@/components/Designer'
-import DesignerSideBar from '@/components/DesignerSideBar'
-import DragOverlayWrapper from '@/components/forms/DragOverlayWrapper'
-import Preview from '@/components/Preview'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
+
+import FormBuilder from '@/components/forms/FormBuilder'
+import { GetFormById } from '@/lib/actions'
 import React from 'react'
 
-export default function Page() {
+export default async function Page({ params }: {
+  params: {
+    id: string
+  }
+}) {
 
-  const mouseSensor = useSensor(MouseSensor, {
-    activationConstraint: {
-      distance: 10,
-    }
-  })
-  const touchSensor = useSensor(TouchSensor)
-  const sensors = useSensors(mouseSensor, touchSensor)
+  const { id } = await params
+  const form = await GetFormById(Number(id))
+  if (!form) {
+    throw new Error("Form not found")
+  }
   return (
-    <div className='flex flex-col w-full grow'>
-      <div className='flex justify-between px-5 py-5'>
-        <p>Form: Name</p>
-        <Preview />
-      </div>
-
-      <DndContext id={"111"} sensors={sensors}>
-        <div className='grow h-[200px] bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>
-          <ResizablePanelGroup direction="horizontal" className='h-full'>
-            <ResizablePanel defaultSize={75}>
-              <div className='overflow-y-auto h-full mx-5'>
-                <Designer />
-              </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={25} minSize={20}>
-              <div className='overflow-y-auto h-full'>
-                <DesignerSideBar />
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
-
-        <DragOverlayWrapper />
-      </DndContext>
-    </div>
+    <FormBuilder form={form}/>
   )
 }
