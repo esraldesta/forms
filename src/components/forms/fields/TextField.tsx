@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect } from 'react'
-import { ElementsType, FormElement, FormElementInstance } from '../FormElements'
+import React, { useEffect, useState } from 'react'
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from '../FormElements'
 import { TextCursorInput } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,77 +11,104 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Switch } from '@/components/ui/switch'
 import useDesigner from '@/hooks/useDesigner'
+import { cn } from '@/lib/utils'
 
 const type: ElementsType = "TextField"
 
 const extraAttributes = {
-  label: "Text field",
-  helperText: "Helper text",
-  required: false,
-  placeholder: "Value Here",
+    label: "Text field",
+    helperText: "Helper text",
+    required: false,
+    placeholder: "Value Here",
 }
 
 const propertiesSchema = z.object(
-  {
-      label: z.string().min(2).max(50),
-      helperText: z.string().max(200),
-      required: z.boolean().default(false),
-      placeholder: z.string().max(50)
-  }
+    {
+        label: z.string().min(2).max(50),
+        helperText: z.string().max(200),
+        required: z.boolean().default(false),
+        placeholder: z.string().max(50)
+    }
 )
 export const TextField: FormElement = {
-  type,
-  btnElement: {
-    icon: <TextCursorInput />,
-    label: "Text Field"
-  },
+    type,
+    btnElement: {
+        icon: <TextCursorInput />,
+        label: "Text Field"
+    },
 
-  constract: (id: string) => {
-    return (
-      {
-        id,
-        type,
-        extraAttributes
-      }
-    )
+    constract: (id: string) => {
+        return (
+            {
+                id,
+                type,
+                extraAttributes
+            }
+        )
 
-  },
-  designerComponent: DesignerComponent,
-  previewComponent: previewComponent,
-  propertiesComponent: PropertiesComponent
+    },
+    designerComponent: DesignerComponent,
+    previewComponent: PreviewComponent,
+    propertiesComponent: PropertiesComponent,
+    validate: (formElement: FormElementInstance, curentValue: string): boolean => {
+        const element = formElement
+        if (element.extraAttributes.required) {
+            return curentValue.length > 0
+        }
+
+        return true
+    }
 }
 
 
 function DesignerComponent({ elementInstance }: {
-  elementInstance: FormElementInstance
-}) {
-  const { label, placeholder, helperText, required } = elementInstance.extraAttributes
-  return <div className='flex flex-col gap-2 w-full'>
-  <Label>{label}{required && "*"}</Label>
-  <Input readOnly disabled placeholder={placeholder}></Input>
-  {helperText && <p className='text-muted-foreground text-[0.8rem]'>{helperText}</p>}
-</div>
-
-}
-
-function previewComponent({ elementInstance }: {
-  elementInstance: FormElementInstance
-}) {
-  const { label, placeholder, helperText, required } = elementInstance.extraAttributes
-  console.log(label,placeholder,helperText,required);
-  
-  return <div className='flex flex-col gap-2 w-full'>
-  <Label>{label}{required && "*"}</Label>
-  <Input placeholder={placeholder}></Input>
-  {helperText && <p className='text-muted-foreground text-[0.8rem]'>{helperText}</p>}
-</div>
-
-}
-
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>
-function PropertiesComponent({ elementInstance }: {
     elementInstance: FormElementInstance
 }) {
+    const { label, placeholder, helperText, required } = elementInstance.extraAttributes
+    return <div className='flex flex-col gap-2 w-full'>
+        <Label>{label}{required && "*"}</Label>
+        <Input readOnly disabled placeholder={placeholder}></Input>
+        {helperText && <p className='text-muted-foreground text-[0.8rem]'>{helperText}</p>}
+    </div>
+
+}
+
+function PreviewComponent({ elementInstance, submitValue, isInValid, defaultValue }: {
+    elementInstance: FormElementInstance,
+    submitValue?: SubmitFunction,
+    isInValid?: boolean,
+    defaultValue?: string
+}) {
+    const [value, setValue] = useState(defaultValue || "")
+    const [error, setError] = useState(false)
+    const { label, placeholder, helperText, required } = elementInstance.extraAttributes
+
+    useEffect(() => {
+        setError(isInValid === true)
+    }, [isInValid])
+
+    return <div className='flex flex-col gap-2 w-full'>
+        <Label className={cn(error && "text-red-500")}>{label}{required && "*"}</Label>
+        <Input className={cn(error && "text-red-500")} placeholder={placeholder} onChange={e => setValue(e.target.value)}
+            onBlur={
+                (e) => {
+                    if (!submitValue) return;
+                    const valid = TextField.validate(elementInstance, e.target.value)
+                    setError(!valid);
+                    if (!valid) return;
+                    submitValue(elementInstance.id, e.target.value)
+                }
+            }
+            value={value}
+        ></Input>
+        {helperText && <p className={cn(error && "text-red-500", "text-muted-foreground text-[0.8rem]")} >{helperText}</p>}
+    </div>
+
+}
+
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
+
+function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
     const element = elementInstance;
     const { updateElement } = useDesigner()
     const form = useForm<propertiesFormSchemaType>(
@@ -113,8 +140,8 @@ function PropertiesComponent({ elementInstance }: {
             }
         })
     }
-    
-    return <Form {...form}>
+
+    return (<Form {...form}>
         <form onBlur={form.handleSubmit(applyChanges)} className='space-y-3' onSubmit={(e) => {
             e.preventDefault()
         }}>
@@ -182,12 +209,12 @@ function PropertiesComponent({ elementInstance }: {
                         </FormDescription>
                     </div>
                     <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange}/>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
             )}>
             </FormField>
         </form>
-    </Form>
+    </Form>)
 }
