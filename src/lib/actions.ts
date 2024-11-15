@@ -202,3 +202,20 @@ export async function Publishform(id: number) {
     },
   });
 }
+
+export async function GetFormContentByUrl(formUrl:string) {
+  return await db.form.update({
+    select:{
+      content:true
+    },
+    data:{
+      visits:{
+        increment:1
+      }
+    },
+    where:{
+      shareURL: formUrl
+    }
+  })
+
+}
