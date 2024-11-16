@@ -19,6 +19,8 @@ export default function DesignerSideBar() {
             <SidebarBtn element={FormElements.ParagraphField} />
             <SidebarBtn element={FormElements.SeparatorField} />
             <SidebarBtn element={FormElements.SpacerField} />
+            <SidebarBtn element={FormElements.NumberField} />
+            <SidebarBtn element={FormElements.TextAreaField} />
           </div>
       }
     </div>
