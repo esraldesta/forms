@@ -29,9 +29,9 @@ export default function Preview() {
                                 const FormComponent = FormElements[element.type].previewComponent
 
                                 return (
-                                    <div key={element.id} className='flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none text-left border'>
-                                        <FormComponent elementInstance={element} />
-                                    </div>)
+
+                                        <FormComponent key={element.id} elementInstance={element} isInValid={false}/>
+                                    )
                             })
                         }
                     </div>
