@@ -21,6 +21,7 @@ export default function DesignerSideBar() {
             <SidebarBtn element={FormElements.SpacerField} />
             <SidebarBtn element={FormElements.NumberField} />
             <SidebarBtn element={FormElements.TextAreaField} />
+            <SidebarBtn element={FormElements.DateField} />
           </div>
       }
     </div>

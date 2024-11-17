@@ -20,7 +20,7 @@ export default function SidebarBtn({ element }: {
             {
             ...draggable.attributes
             }
-            className='w-[100px] h-[100px] flex flex-col justify-center items-center bg-accent rounded overflow-hidden text-center'>
+            className='w-[100px] h-[100px] flex flex-col justify-center items-center bg-accent rounded overflow-hidden text-center shadow'>
             {icon}
             <p>{label}</p>
         </div>

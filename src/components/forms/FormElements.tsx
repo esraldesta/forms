@@ -7,8 +7,9 @@ import { SeparatorField } from "./layouts/SeparatorField"
 import { SpacerField } from "./layouts/SpacerField"
 import { NumberField } from "./fields/NumberFIeld"
 import { TextAreaField } from "./fields/TextAreaField"
+import { DateField } from "./fields/DateField"
 
-export type ElementsType = "TextField" | "TitleField" | "SubTitleField" | "ParagraphField" | "SeparatorField" | "SpacerField" | "NumberField" | "TextAreaField"
+export type ElementsType = "TextField" | "TitleField" | "SubTitleField" | "ParagraphField" | "SeparatorField" | "SpacerField" | "NumberField" | "TextAreaField" | "DateField"
 
 export type SubmitFunction = (key: string, value: string) => void
 
@@ -44,6 +45,6 @@ export const FormElements: FormElementsType = {
     SeparatorField: SeparatorField,
     SpacerField: SpacerField,
     NumberField: NumberField,
-    TextAreaField: TextAreaField
-
+    TextAreaField: TextAreaField,
+    DateField: DateField
 }
