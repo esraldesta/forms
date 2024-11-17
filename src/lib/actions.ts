@@ -3,8 +3,9 @@ import { formSchema } from "@/lib/schemas";
 import { z } from "zod";
 import db from "./db";
 import bcrypt from "bcryptjs";
-import { auth, signIn, signOut } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
+import { getCurrentUser, isOwner } from "./utils";
 const signupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(32),
@@ -87,16 +88,12 @@ export async function signout() {
   await signOut();
 }
 
-class UserNotFoundError extends Error {}
-
 export async function GetFormStats() {
-  const session = await auth();
-  if (!session?.user) {
-    throw new UserNotFoundError();
-  }
+  const user = await getCurrentUser();
+
   const stats = db.form.aggregate({
     where: {
-      userID: session.user.id,
+      userID: user.id,
     },
     _sum: {
       visits: true,
@@ -125,15 +122,11 @@ export async function CreateForm(data: formSchemaType) {
   if (!validation.success) {
     throw new Error("form not valid");
   }
-  const session = await auth();
-  console.log("session", session);
+  const user = await getCurrentUser();
 
-  if (!session?.user) {
-    throw new UserNotFoundError();
-  }
   const form = await db.form.create({
     data: {
-      userID: session.user.id as string,
+      userID: user.id as string,
       name: data.name,
       description: data.description,
     },
@@ -147,14 +140,11 @@ export async function CreateForm(data: formSchemaType) {
 }
 
 export async function GetForms() {
-  const session = await auth();
-  if (!session?.user) {
-    throw new UserNotFoundError();
-  }
+  const user = await getCurrentUser();
 
   return await db.form.findMany({
     where: {
-      userID: session.user.id,
+      userID: user.id,
     },
     orderBy: {
       createdAt: "desc",
@@ -163,23 +153,24 @@ export async function GetForms() {
 }
 
 export async function GetFormById(id: number) {
-  const session = await auth();
-  if (!session?.user) throw new UserNotFoundError();
-  return await db.form.findUnique({
+  const user = await getCurrentUser();
+  const form = await db.form.findUnique({
     where: {
-      userID: session.user.id,
+      userID: user.id,
       id,
     },
   });
+  if (await isOwner(user?.id as string, form?.userID as string)) {
+    return form
+  }
 }
 
 export async function UpdateFormContent(id: number, jsonContent: string) {
-  const session = await auth();
-  if (!session?.user) throw new UserNotFoundError();
+  const user = await getCurrentUser();
 
   return db.form.update({
     where: {
-      userID: session.user.id,
+      userID: user.id,
       id,
     },
     data: {
@@ -189,18 +180,21 @@ export async function UpdateFormContent(id: number, jsonContent: string) {
 }
 
 export async function Publishform(id: number) {
-  const session = await auth();
-  if (!session?.user) throw new UserNotFoundError();
+  const user = await getCurrentUser();
 
-  return db.form.update({
+  const form = await db.form.update({
     data: {
       published: true,
     },
     where: {
-      userID: session.user.id,
+      userID: user.id,
       id,
     },
   });
+
+  if (await isOwner(user?.id as string, form?.userID as string)) {
+    return form
+  }
 }
 
 export async function GetFormContentByUrl(formUrl: string) {
@@ -239,16 +233,19 @@ export async function SubmitForm(formUrl: string, content: string) {
 }
 
 export async function GetFormWithSubmission(id: number) {
-  const session = await auth();
-  if (!session?.user) throw new UserNotFoundError();
+  const user = await getCurrentUser();
 
-  return await db.form.findUnique({
+  const form = await db.form.findUnique({
     where: {
       id,
-      userID: session.user.id,
+      userID: user.id,
     },
     include: {
       FormSubmissions: true,
-    }
+    },
   });
+
+  if (await isOwner(user?.id as string, form?.userID as string)) {
+    return form
+  }
 }

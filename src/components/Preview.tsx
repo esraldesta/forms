@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogTrigger } from './ui/dialog'
 import { Button } from './ui/button'
 import useDesigner from '@/hooks/useDesigner'
 import { FormElements } from './forms/FormElements'
+import { Presentation } from 'lucide-react'
 
 export default function Preview() {
     const { elements } = useDesigner()
@@ -10,8 +11,9 @@ export default function Preview() {
         <Dialog>
 
             <DialogTrigger asChild>
-                <Button variant={'outline'}>
-                    Preview
+                <Button variant={'outline'} size={'sm'} className='flex justify-center items-center'>
+                    <Presentation/>
+                    <span className='hidden md:block'>Preview</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className='w-screen h-screen max-h-screen max-w-full flex flex-col flex-grow p-0 gap-0'>

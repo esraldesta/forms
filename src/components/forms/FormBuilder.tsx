@@ -26,7 +26,11 @@ export default function FormBuilder({ form }: {
             distance: 10,
         }
     })
-    const touchSensor = useSensor(TouchSensor)
+    const touchSensor = useSensor(TouchSensor,{
+        activationConstraint:{
+            distance:10
+        }
+    })
     const sensors = useSensors(mouseSensor, touchSensor)
 
     useEffect(() => {
@@ -81,9 +85,9 @@ export default function FormBuilder({ form }: {
     }
     return (
         <div className='flex flex-col w-full grow'>
-            <div className='flex justify-between px-5 py-5'>
-                <p>Form: Name</p>
-                <div>
+            <div className='flex justify-between px-2  md:px-5 py-5'>
+                <p className='truncate'>Form: <span className='text-xs'>{form.name}</span></p>
+                <div className='flex justify-end gap-x-1'>
                     <Preview />
                     {
                         !form.published &&
@@ -98,13 +102,13 @@ export default function FormBuilder({ form }: {
             <DndContext id={"111"} sensors={sensors}>
                 <div className='grow h-[200px] bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>
                     <ResizablePanelGroup direction="horizontal" className='h-full'>
-                        <ResizablePanel defaultSize={75}>
+                        <ResizablePanel defaultSize={73}>
                             <div className='overflow-y-auto h-full mx-5'>
                                 <Designer />
                             </div>
                         </ResizablePanel>
                         <ResizableHandle withHandle />
-                        <ResizablePanel defaultSize={25} minSize={20}>
+                        <ResizablePanel defaultSize={27} minSize={20}>
                             <div className='overflow-y-auto h-full'>
                                 <DesignerSideBar />
                             </div>

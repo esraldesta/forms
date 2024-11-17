@@ -36,7 +36,7 @@ export default function PublishFormBtn({ id }: {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className='gap-2 text-white bg-gradient-to-r from-indigo-300 to-cyan-400'>
+                <Button className='gap-2 text-white bg-gradient-to-r from-indigo-300 to-cyan-400' size={'sm'}>
                     <FileBadge2 className='h-4 w-4' />
                     Publish
                 </Button>

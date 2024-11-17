@@ -92,7 +92,7 @@ export default function Designer() {
   return (
     <div ref={droppable.setNodeRef}
       className='pb-10 flex justify-center h-full'>
-      <div className='text-center mt-5 bg-background w-full max-w-[800px] h-full overflow-y-auto'>
+      <div className='text-center mt-5 bg-background w-full max-w-[800px] h-full overflow-y-auto px-2 py-2'>
         {!droppable.isOver && elements.length < 1 && <p className='text-3xl text-muted-foreground h-full justify-center flex flex-grow items-center font-bold text-center'>
             Drop here
           </p>}
