@@ -13,19 +13,19 @@ import { Button } from "./ui/button";
 
 const myProducts = [
     {
-        title: "one",
-        link: "one",
+        title: "Event registration form",
+        link: "https://forms-phi-lemon.vercel.app/submit/d68ff511-436b-48f3-ba42-00ccd79d2c7f",
         thumbnail: "/1.png"
     },
     {
-        title: "two",
-        link: "two",
-        thumbnail: "/2.png"
+        title: "Workshop Registration",
+        link: "https://forms-phi-lemon.vercel.app/submit/018014f0-b337-46db-a502-7c44cd5be2e9",
+        thumbnail: "/2.PNG"
     },
     {
-        title: "three",
-        link: "three",
-        thumbnail: "/3.jpg"
+        title: "User Registration Form",
+        link: "https://forms-phi-lemon.vercel.app/submit/4a52618a-ff6a-4685-b900-73d39ea19229",
+        thumbnail: "/3.PNG"
     }
 ]
 export default function Hero() {
