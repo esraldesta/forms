@@ -20,7 +20,7 @@ const myProducts = [
     {
         title: "Workshop Registration",
         link: "https://forms-phi-lemon.vercel.app/submit/018014f0-b337-46db-a502-7c44cd5be2e9",
-        thumbnail: "/2.PNG"
+        thumbnail: "/2.png"
     },
     {
         title: "User Registration Form",
