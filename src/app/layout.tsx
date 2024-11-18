@@ -17,7 +17,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: 'forms',
-  description: 'The best alternative for Google-forms with easy drog and drop form elements',
+  description: 'The best alternative for Google-Forms with easy drog and drop form elements',
 }
 
 
