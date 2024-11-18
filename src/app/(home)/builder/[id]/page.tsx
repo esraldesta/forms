@@ -3,10 +3,10 @@ import FormBuilder from '@/components/forms/FormBuilder'
 import { GetFormById } from '@/lib/actions'
 import React from 'react'
 
-export default async function Page({ params }: {
-  params: {
-    id: string
-  }
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
 }) {
 
   const { id } = await params
@@ -15,6 +15,6 @@ export default async function Page({ params }: {
     throw new Error("Form not found")
   }
   return (
-    <FormBuilder form={form}/>
+    <FormBuilder form={form} />
   )
 }

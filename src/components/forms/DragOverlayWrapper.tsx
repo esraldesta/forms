@@ -2,7 +2,6 @@ import { Active, DragOverlay, useDndMonitor } from '@dnd-kit/core'
 import React, { useState } from 'react'
 import { ElementsType, FormElements } from './FormElements'
 import { SidebarBtnWrapper } from '../SidebarBtn'
-import { DesignerComponentWrapper } from '../Designer'
 import useDesigner from '@/hooks/useDesigner'
 
 export default function DragOverlayWrapper() {

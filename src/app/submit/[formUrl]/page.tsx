@@ -3,11 +3,11 @@ import FormSubmitComponent from '@/components/forms/FormSubmitComponent';
 import { GetFormContentByUrl } from '@/lib/actions';
 import React from 'react'
 
-export default async function Page({ params }: {
-    params: {
-        formUrl: string
-    }
-}) {
+export default async function Page({
+    params,
+  }: {
+    params: Promise<{ formUrl: string }>
+  }) {
     const { formUrl } = await params
     const form = await GetFormContentByUrl(formUrl);
     if (!form) {

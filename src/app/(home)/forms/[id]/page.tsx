@@ -8,10 +8,10 @@ import { ArrowDownRightFromCircleIcon, ClipboardCheck, Folder, View } from 'luci
 import { ElementsType, FormElementInstance } from '@/components/forms/FormElements'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatDistance } from 'date-fns'
-export default async function FormDetailsPage({ params }: {
-  params: {
-    id: string
-  }
+export default async function FormDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
 }) {
 
   const { id } = await params
@@ -177,6 +177,7 @@ function RowCell({ type, value }: {
   type: ElementsType;
   value: string
 }) {
-  let node: ReactNode = value;
+  console.log(type);
+  const node: ReactNode = value;
   return <TableCell>{node}</TableCell>
 }
