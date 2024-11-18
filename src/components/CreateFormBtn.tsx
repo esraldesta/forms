@@ -11,27 +11,29 @@ import { Textarea } from './ui/textarea'
 import { CreateForm } from '@/lib/actions'
 import { FilePlus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
 
 type formSchemaType = z.infer<typeof formSchema>
 export default function CreateFormBtn() {
     const router = useRouter()
+    const { toast } = useToast()
     const form = useForm<formSchemaType>({
         resolver: zodResolver(formSchema),
     });
     async function onSubmit(values: formSchemaType) {
         try {
             const formId = await CreateForm(values)
-            // toast({
-            //     title:"Success",
-            //     description:"Form created successfully"
-            // })
+            toast({
+                title:"Success",
+                description:"Form created successfully"
+            })
             router.push(`/builder/${formId}`)
         } catch (error) {
-            // toast({
-            //     title:"Error",
-            //     description:"Something went wrong"
-            //     variant:"destructive" 
-            // })
+            toast({
+                title:"Error",
+                description:"Something went wrong",
+                variant:"destructive"
+            })
             console.log(error);
 
         }

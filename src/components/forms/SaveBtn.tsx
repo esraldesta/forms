@@ -2,12 +2,14 @@ import React, { useTransition } from 'react'
 import { Button } from '../ui/button'
 import useDesigner from '@/hooks/useDesigner'
 import { UpdateFormContent } from '@/lib/actions'
-import { toast } from '@/hooks/use-toast'
+
 import { Loader, Save } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 export default function SaveBtn({ id }: {
     id: number
 }) {
+    const { toast } = useToast()
     const { elements } = useDesigner()
     const [loading, startStransition] = useTransition()
     const updateFormContent = async () => {

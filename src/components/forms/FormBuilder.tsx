@@ -15,10 +15,12 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import Confetti from 'react-confetti'
+import { useToast } from '@/hooks/use-toast'
 
 export default function FormBuilder({ form }: {
     form: Form
 }) {
+    const { toast } = useToast()
     const { setElements } = useDesigner()
     const [isReady, setIsReady] = useState(false)
     const mouseSensor = useSensor(MouseSensor, {
@@ -63,12 +65,12 @@ export default function FormBuilder({ form }: {
                         <Button className='mt-2 w-full' onClick={() => {
                             navigator.clipboard.writeText(shareUrl)
 
-                            // toast(
-                            //     {
-                            //         title:"Copied!",
-                            //         description:"Link Copied to clipboard"
-                            //     }    
-                            //    )
+                            toast(
+                                {
+                                    title:"Copied!",
+                                    description:"Link Copied to clipboard"
+                                }    
+                               )
                         }}>Copy link</Button>
                     </div>
                     <div className="flex justify-between">

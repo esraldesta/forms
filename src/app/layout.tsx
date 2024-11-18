@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import DesignerContextProvider from "@/contexts/DesignerContext";
 import NextToploader from 'nextjs-toploader'
+import { Toaster } from "@/components/ui/toaster"
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: {
               {children}
             </ThemeProvider>
           </DesignerContextProvider>
-
+          <Toaster />
       </body>
     </html>
   );

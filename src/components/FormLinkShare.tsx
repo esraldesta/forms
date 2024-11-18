@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { Share } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 export default function FormLinkShare({ shareUrl }: {
     shareUrl: string
 }) {
+    const { toast } = useToast()
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
@@ -20,10 +22,10 @@ export default function FormLinkShare({ shareUrl }: {
             <Input value={shareLink} readOnly />
             <Button className='w-[200px]' onClick={() => {
                 navigator.clipboard.writeText(shareLink)
-                // toast({
-                //     title:"Copied",
-                //     description:"Link copied to clipboard"
-                // })
+                toast({
+                    title:"Copied",
+                    description:"Link copied to clipboard"
+                })
             }}>
                 <Share className='mr-2 h-4 w-4' />
                 Share Link

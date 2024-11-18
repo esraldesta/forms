@@ -4,6 +4,7 @@ import { FormElementInstance, FormElements } from './FormElements'
 import { Button } from '../ui/button'
 import { Loader, MousePointerClickIcon } from 'lucide-react'
 import { SubmitForm } from '@/lib/actions'
+import { useToast } from '@/hooks/use-toast'
 
 export default function FormSubmitComponent({
     formUrl,
@@ -12,6 +13,7 @@ export default function FormSubmitComponent({
     formUrl: string,
     formContent: FormElementInstance[]
 }) {
+    const { toast } = useToast()
     const formValues = useRef<{ [key: string]: string }>({})
     const formErrors = useRef<{ [key: string]: boolean }>({})
     const [renderKey, setRenderKey] = useState(new Date().getTime())
@@ -39,11 +41,11 @@ export default function FormSubmitComponent({
         const validForm = validateForm();
         if (!validForm) {
             setRenderKey(new Date().getTime())
-            // toast({
-            //     title: "Error",
-            //     description: "Please check the form errors",
-            //     variant: "destructive"
-            // })
+            toast({
+                title: "Error",
+                description: "Please check the form errors",
+                variant: "destructive"
+            })
             return;
         }
 
@@ -54,11 +56,11 @@ export default function FormSubmitComponent({
         } catch (error) {
             console.log(error);
 
-            // toast({
-            //     title: "Error",
-            //     description: "Something went wrong",
-            //     variant: "destructive"
-            // })
+            toast({
+                title: "Error",
+                description: "Something went wrong",
+                variant: "destructive"
+            })
         }
     }
 

@@ -4,31 +4,33 @@ import { FileBadge2 } from 'lucide-react'
 import { AlertDialog, AlertDialogContent, AlertDialogTitle, AlertDialogTrigger, AlertDialogDescription, AlertDialogHeader, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from '../ui/alert-dialog'
 import { Publishform } from '@/lib/actions'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
 
 export default function PublishFormBtn({ id }: {
     id: number
 }) {
+    const { toast } = useToast()
     const router = useRouter()
     const [loading, startTransition] = useTransition()
     async function publishForm() {
         try {
             await Publishform(id);
-            // toast(
-            //     {
-            //         title:"Success",
-            //         description:"Your form is now available to the public ",
-            //         variant:'destructive'
-            //     }    
-            //    )
+            toast(
+                {
+                    title:"Success",
+                    description:"Your form is now available to the public ",
+                    variant:'destructive'
+                }    
+               )
             router.refresh()
         } catch (error) {
-            // toast(
-            //     {
-            //         title:"Error",
-            //         description:"Something went wrong",
-            //         variant:'destructive'
-            //     }    
-            //    )
+            toast(
+                {
+                    title:"Error",
+                    description:"Something went wrong",
+                    variant:'destructive'
+                }    
+               )
             console.log(error);
 
         }
