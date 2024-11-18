@@ -2,6 +2,14 @@ import Hero from '@/components/Hero'
 import Link from 'next/link'
 import React from 'react'
 
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'forms',
+  description: 'The best alternative for Google-forms with easy drog and drop form elements',
+}
+
+
 export default function page() {
     return (
         <div>
